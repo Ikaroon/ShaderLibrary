@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Ikaroon.ShaderRoom
+namespace Ikaroon.DemoEssentials
 {
 	public class Turntable : MonoBehaviour
 	{
