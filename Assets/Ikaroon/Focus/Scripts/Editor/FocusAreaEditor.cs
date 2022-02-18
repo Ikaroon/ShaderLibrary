@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
+using Ikaroon.Focus;
 
-namespace Ikaroon.Focus
+namespace Ikaroon.FocusEditor
 {
 	[CustomEditor(typeof(FocusArea))]
 	public class FocusAreaEditor : Editor
@@ -11,47 +10,47 @@ namespace Ikaroon.Focus
 
 		#region Styles
 
-		private GUIStyle styleBox, styleHeader;
+		private GUIStyle m_styleBox, m_styleHeader;
 
 		void InitStyles()
 		{
-			styleBox = new GUIStyle(GUI.skin.GetStyle("GroupBox"));
+			m_styleBox = new GUIStyle(GUI.skin.GetStyle("GroupBox"));
 
-			styleHeader = new GUIStyle(GUI.skin.GetStyle("BoldLabel"));
+			m_styleHeader = new GUIStyle(GUI.skin.GetStyle("BoldLabel"));
 		}
 
 		#endregion Styles
 
-		private FocusArea focusArea;
+		private FocusArea m_focusArea;
 
 		private void OnEnable()
 		{
-			focusArea = (FocusArea)target;
+			m_focusArea = (FocusArea)target;
 		}
 
 		public override void OnInspectorGUI()
 		{
-			if (styleBox == null)
+			if (m_styleBox == null)
 			{
 				InitStyles();
 			}
 
-			EditorGUILayout.BeginVertical(styleBox);
+			EditorGUILayout.BeginVertical(m_styleBox);
 
-			EditorGUILayout.LabelField("Settings", styleHeader);
-			focusArea.focusBounds = EditorGUILayout.BoundsField(focusArea.focusBounds);
+			EditorGUILayout.LabelField("Settings", m_styleHeader);
+			m_focusArea.FocusBounds = EditorGUILayout.BoundsField(m_focusArea.FocusBounds);
 			EditorGUILayout.EndVertical();
 
 
-			EditorGUILayout.BeginVertical(styleBox);
-			focusArea.e_edit = EditorGUILayout.BeginToggleGroup("Scene Edit", focusArea.e_edit);
+			EditorGUILayout.BeginVertical(m_styleBox);
+			m_focusArea.e_edit = EditorGUILayout.BeginToggleGroup("Scene Edit", m_focusArea.e_edit);
 
-			if (focusArea.e_edit)
+			if (m_focusArea.e_edit)
 			{
-				focusArea.e_targetBoundsColor = EditorGUILayout.ColorField("Target Bounds", focusArea.e_targetBoundsColor);
+				m_focusArea.e_targetBoundsColor = EditorGUILayout.ColorField("Target Bounds", m_focusArea.e_targetBoundsColor);
 				if (GUILayout.Button("Focus Area"))
 				{
-					focusArea.Focus();
+					m_focusArea.Focus();
 				}
 			}
 
@@ -63,10 +62,10 @@ namespace Ikaroon.Focus
 
 		public void OnSceneGUI()
 		{
-			if (focusArea.e_edit)
+			if (m_focusArea.e_edit)
 			{
-				Vector3 center = focusArea.focusBounds.center;
-				Vector3 size = focusArea.focusBounds.size;
+				Vector3 center = m_focusArea.FocusBounds.center;
+				Vector3 size = m_focusArea.FocusBounds.size;
 
 				EditorGUI.BeginChangeCheck();
 
@@ -81,7 +80,7 @@ namespace Ikaroon.Focus
 
 				if (EditorGUI.EndChangeCheck())
 				{
-					focusArea.focusBounds = new Bounds(center, size);
+					m_focusArea.FocusBounds = new Bounds(center, size);
 				}
 			}
 
@@ -91,7 +90,7 @@ namespace Ikaroon.Focus
 		{
 			Vector3 endA = center + size;
 			Vector3 endB = center - size;
-			endA = Handles.FreeMoveHandle(endA + focusArea.transform.position, Quaternion.identity, HandleUtility.GetHandleSize(endA + focusArea.transform.position) * 0.05f, new Vector3(0f, 0f, 0f), Handles.CubeHandleCap) - focusArea.transform.position;
+			endA = Handles.FreeMoveHandle(endA + m_focusArea.transform.position, Quaternion.identity, HandleUtility.GetHandleSize(endA + m_focusArea.transform.position) * 0.05f, new Vector3(0f, 0f, 0f), Handles.CubeHandleCap) - m_focusArea.transform.position;
 
 			Vector3 scaleVector = new Vector3(Mathf.Abs(Mathf.Sign(size.x)), Mathf.Abs(Mathf.Sign(size.y)), Mathf.Abs(Mathf.Sign(size.z)));
 

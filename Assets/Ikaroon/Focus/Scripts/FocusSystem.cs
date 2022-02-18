@@ -13,7 +13,7 @@ namespace Ikaroon.Focus
 		private readonly static string FULL_PATH = RAW_RES_PATH + DATA_PATH + ".asset";
 
 		//Singleton
-		private static FocusSystem cachedData;
+		private static FocusSystem s_cachedData;
 		public static FocusSystem DATA
 		{
 			get
@@ -24,30 +24,36 @@ namespace Ikaroon.Focus
 					Directory.CreateDirectory(fullSystemPath);
 				
 				//No cached try to get it from the Resources folder
-				if (cachedData == null)
+				if (s_cachedData == null)
 				{
-					cachedData = Resources.Load<FocusSystem>(DATA_PATH);
+					s_cachedData = Resources.Load<FocusSystem>(DATA_PATH);
 				}
 				//Not cached then try to create it in the Resources Folder
-				if (cachedData == null)
+				if (s_cachedData == null)
 				{
 #if UNITY_EDITOR
-					cachedData = ScriptableObject.CreateInstance<FocusSystem>();
-					UnityEditor.AssetDatabase.CreateAsset(cachedData, fullPath);
+					s_cachedData = ScriptableObject.CreateInstance<FocusSystem>();
+					UnityEditor.AssetDatabase.CreateAsset(s_cachedData, fullPath);
 					UnityEditor.AssetDatabase.Refresh();
 #endif
 				}
-				return cachedData;
+				return s_cachedData;
 			}
 		}
 
 		//Statics
-		public static Bounds focusedBounds;
-		public static Bounds oldFocusBounds;
+		public static Bounds FocusedBounds { get { return s_focusedBounds; } }
+		private static Bounds s_focusedBounds;
+		public static Bounds OldFocusBounds { get { return s_oldFocusBounds; } }
+		private static Bounds s_oldFocusBounds;
 
 		//Fields
-		public float focusDuration = 0.5f;
-		public float boundsOffset = 0.1f;
+		public float FocusDuration { get { return m_focusDuration; } set { m_focusDuration = value; } }
+		[SerializeField]
+		private float m_focusDuration = 0.5f;
+		public float BoundsOffset { get { return m_boundsOffset; } set { m_boundsOffset = value; } }
+		[SerializeField]
+		private float m_boundsOffset = 0.1f;
 
 		//Selection
 		private enum Dimension { X = 0, Y = 1, Z = 2 };
@@ -59,21 +65,20 @@ namespace Ikaroon.Focus
 		public Color e_newBoundsColor = Color.green;
 #endif
 
-
 		public static void Focus(Bounds area)
 		{
-			oldFocusBounds = focusedBounds;
-			focusedBounds = new Bounds(area.center, area.size + new Vector3(DATA.boundsOffset, DATA.boundsOffset, DATA.boundsOffset));
+			s_oldFocusBounds = s_focusedBounds;
+			s_focusedBounds = new Bounds(area.center, area.size + new Vector3(DATA.m_boundsOffset, DATA.m_boundsOffset, DATA.m_boundsOffset));
 			
-			Shader.SetGlobalVector("FOCUS_DATA", new Vector4(Time.timeSinceLevelLoad, DATA.focusDuration, 0f, 0f));
-			SendBounds(oldFocusBounds, focusedBounds, Dimension.X);
-			SendBounds(oldFocusBounds, focusedBounds, Dimension.Y);
-			SendBounds(oldFocusBounds, focusedBounds, Dimension.Z);
+			Shader.SetGlobalVector("FOCUS_DATA", new Vector4(Time.timeSinceLevelLoad, DATA.m_focusDuration, 0f, 0f));
+			SendBounds(s_oldFocusBounds, s_focusedBounds, Dimension.X);
+			SendBounds(s_oldFocusBounds, s_focusedBounds, Dimension.Y);
+			SendBounds(s_oldFocusBounds, s_focusedBounds, Dimension.Z);
 		}
 
 		public static void HardFocus(Bounds area)
 		{
-			focusedBounds = area;
+			s_focusedBounds = area;
 			Focus(area);
 		}
 

@@ -1,0 +1,16 @@
+{
+    "name": "Ikaroon.Focus.Demo",
+    "rootNamespace": "Ikaroon.Focus.Demo",
+    "references": [
+        "GUID:151f6add512a74946acaf7488b7dc5c3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

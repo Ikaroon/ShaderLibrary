@@ -1,27 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
+using Ikaroon.Focus;
 
-namespace Ikaroon.Focus
+namespace Ikaroon.FocusEditor
 {
 	public class FocusSystemWindow : EditorWindow
 	{
 
 		#region Styles
 
-		private GUIStyle styleBox, styleHeader;
+		private GUIStyle m_styleBox, m_styleHeader;
 
 		void InitStyles()
 		{
-			styleBox = new GUIStyle(GUI.skin.GetStyle("GroupBox"));
+			m_styleBox = new GUIStyle(GUI.skin.GetStyle("GroupBox"));
 
-			styleHeader = new GUIStyle(GUI.skin.GetStyle("BoldLabel"));
+			m_styleHeader = new GUIStyle(GUI.skin.GetStyle("BoldLabel"));
 		}
 
 		#endregion Styles
 
-		private static FocusSystem data;
+		private static FocusSystem s_data;
 
 		[MenuItem("Tools/Ikaroon/Focus Settings", priority = 21)]
 		static void Init()
@@ -29,7 +28,7 @@ namespace Ikaroon.Focus
 			FocusSystemWindow window = CreateInstance<FocusSystemWindow>();
 			window.ShowUtility();
 			window.minSize = new Vector2(400f, 200f);
-			data = FocusSystem.DATA;
+			s_data = FocusSystem.DATA;
 		}
 
 		void OnEnable()
@@ -39,34 +38,34 @@ namespace Ikaroon.Focus
 
 		void OnGUI()
 		{
-			if (styleBox == null)
+			if (m_styleBox == null)
 			{
 				InitStyles();
 			}
 
-			if (data == null)
+			if (s_data == null)
 			{
-				data = FocusSystem.DATA;
+				s_data = FocusSystem.DATA;
 			}
 
 			EditorGUI.BeginChangeCheck();
 
-			EditorGUILayout.BeginVertical(styleBox);
+			EditorGUILayout.BeginVertical(m_styleBox);
 
-			EditorGUILayout.LabelField("Settings", styleHeader);
-			data.focusDuration = EditorGUILayout.FloatField("Focus Duration", Mathf.Max(0f, data.focusDuration));
-			data.boundsOffset = EditorGUILayout.FloatField("Bounds Offset", Mathf.Max(0f, data.boundsOffset));
+			EditorGUILayout.LabelField("Settings", m_styleHeader);
+			s_data.FocusDuration = EditorGUILayout.FloatField("Focus Duration", Mathf.Max(0f, s_data.FocusDuration));
+			s_data.BoundsOffset = EditorGUILayout.FloatField("Bounds Offset", Mathf.Max(0f, s_data.BoundsOffset));
 
 			EditorGUILayout.EndVertical();
 
 
-			EditorGUILayout.BeginVertical(styleBox);
-			data.e_debug = EditorGUILayout.BeginToggleGroup("Edit", data.e_debug);
+			EditorGUILayout.BeginVertical(m_styleBox);
+			s_data.e_debug = EditorGUILayout.BeginToggleGroup("Edit", s_data.e_debug);
 
-			if (data.e_debug)
+			if (s_data.e_debug)
 			{
-				data.e_oldBoundsColor = EditorGUILayout.ColorField("Old Bounds", data.e_oldBoundsColor);
-				data.e_newBoundsColor = EditorGUILayout.ColorField("New Bounds", data.e_newBoundsColor);
+				s_data.e_oldBoundsColor = EditorGUILayout.ColorField("Old Bounds", s_data.e_oldBoundsColor);
+				s_data.e_newBoundsColor = EditorGUILayout.ColorField("New Bounds", s_data.e_newBoundsColor);
 			}
 
 			EditorGUILayout.EndToggleGroup();
@@ -74,7 +73,7 @@ namespace Ikaroon.Focus
 
 			if (EditorGUI.EndChangeCheck())
 			{
-				EditorUtility.SetDirty(data);
+				EditorUtility.SetDirty(s_data);
 			}
 		}
 
@@ -94,25 +93,25 @@ namespace Ikaroon.Focus
 
 		public void OnSceneGUI(SceneView sceneView)
 		{
-			if (data == null)
+			if (s_data == null)
 			{
-				data = FocusSystem.DATA;
+				s_data = FocusSystem.DATA;
 			}
 
-			if (data.e_debug)
+			if (s_data.e_debug)
 			{
-				Vector3 oCenter = FocusSystem.oldFocusBounds.center;
-				Vector3 oSize = FocusSystem.oldFocusBounds.size;
+				Vector3 oCenter = FocusSystem.OldFocusBounds.center;
+				Vector3 oSize = FocusSystem.OldFocusBounds.size;
 
-				Vector3 nCenter = FocusSystem.focusedBounds.center;
-				Vector3 nSize = FocusSystem.focusedBounds.size;
+				Vector3 nCenter = FocusSystem.FocusedBounds.center;
+				Vector3 nSize = FocusSystem.FocusedBounds.size;
 
 				Color oldColor = Handles.color;
 
-				Handles.color = data.e_oldBoundsColor;
+				Handles.color = s_data.e_oldBoundsColor;
 				Handles.DrawWireCube(oCenter, oSize);
 
-				Handles.color = data.e_newBoundsColor;
+				Handles.color = s_data.e_newBoundsColor;
 				Handles.DrawWireCube(nCenter, nSize);
 
 				Handles.color = oldColor;

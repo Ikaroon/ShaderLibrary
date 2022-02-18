@@ -6,8 +6,11 @@ namespace Ikaroon.Focus
 	{
 
 		//Singleton
-		public static FocusArea main;
-		public Bounds focusBounds;
+		public static FocusArea s_main;
+
+		public Bounds FocusBounds { get { return m_focusBounds; } set { m_focusBounds = value; } }
+		[SerializeField]
+		private Bounds m_focusBounds;
 
 		//Editor Variables
 		#if UNITY_EDITOR
@@ -17,19 +20,19 @@ namespace Ikaroon.Focus
 
 		private void Awake()
 		{
-			main = this;
+			s_main = this;
 		}
 
 		public void Focus()
 		{
-			Bounds tempBounds = focusBounds;
+			Bounds tempBounds = m_focusBounds;
 			tempBounds.center += transform.position;
 			FocusSystem.Focus(tempBounds);
 		}
 
 		public void HardFocus()
 		{
-			Bounds tempBounds = focusBounds;
+			Bounds tempBounds = m_focusBounds;
 			tempBounds.center += transform.position;
 			FocusSystem.HardFocus(tempBounds);
 		}
@@ -44,7 +47,7 @@ namespace Ikaroon.Focus
 				Color oldColor = Gizmos.color;
 
 				Gizmos.color = e_targetBoundsColor;
-				Gizmos.DrawWireCube(transform.position + focusBounds.center, focusBounds.size);
+				Gizmos.DrawWireCube(transform.position + m_focusBounds.center, m_focusBounds.size);
 
 				Gizmos.color = oldColor;
 			}

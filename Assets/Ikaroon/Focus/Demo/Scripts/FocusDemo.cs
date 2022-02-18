@@ -17,7 +17,7 @@ namespace Ikaroon.Focus.Demo
 		void Start()
 		{
 			m_areas[m_lastIndex].HardFocus();
-			var focusDuration = m_interval + FocusSystem.DATA.focusDuration;
+			var focusDuration = m_interval + FocusSystem.DATA.FocusDuration;
 			InvokeRepeating(nameof(FocusNext), focusDuration, focusDuration);
 		}
 

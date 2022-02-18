@@ -1,0 +1,16 @@
+{
+    "name": "Ikaroon.Rewind.Demo",
+    "rootNamespace": "Ikaroon.Rewind.Demo",
+    "references": [
+        "GUID:3a17c972b4cb3664b9225dd89b6cfaff"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

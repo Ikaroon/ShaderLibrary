@@ -525,9 +525,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e4a563eccfb9340b5bda7b6fd259b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  focusBounds:
-    m_Center: {x: 0, y: 2.5, z: 0}
-    m_Extent: {x: 5, y: 2.5, z: 2.5}
+  m_focusBounds:
+    m_Center: {x: 0, y: 3, z: 0}
+    m_Extent: {x: 5, y: 3, z: 2.5}
   e_edit: 1
   e_targetBoundsColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &339017189
@@ -634,9 +634,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e4a563eccfb9340b5bda7b6fd259b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  focusBounds:
-    m_Center: {x: 0, y: 2.5, z: 0}
-    m_Extent: {x: 5, y: 2.5, z: 2.5}
+  m_focusBounds:
+    m_Center: {x: 0, y: 3, z: 0}
+    m_Extent: {x: 5, y: 3, z: 2.5}
   e_edit: 1
   e_targetBoundsColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!4 &362925865
@@ -1558,9 +1558,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e4a563eccfb9340b5bda7b6fd259b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  focusBounds:
-    m_Center: {x: 0, y: 2.5, z: -2.5}
-    m_Extent: {x: 5, y: 2.5, z: 5}
+  m_focusBounds:
+    m_Center: {x: 0, y: 3, z: 0}
+    m_Extent: {x: 5, y: 3, z: 5}
   e_edit: 1
   e_targetBoundsColor: {r: 1, g: 0.8847568, b: 0, a: 1}
 --- !u!4 &1794371084
@@ -1571,7 +1571,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1794371082}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
