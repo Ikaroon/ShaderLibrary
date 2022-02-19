@@ -66,9 +66,18 @@ Shader "Ikaroon/Glitter/Standard"
 		void surf (Input IN, inout SurfaceOutputStandard o)
 		{
 			o.Normal = UnpackNormal(tex2D(_Normal, IN.uv_Normal));
+			
+			float3 worldScale = float3(
+				length(float3(unity_ObjectToWorld[0].x, unity_ObjectToWorld[1].x, unity_ObjectToWorld[2].x)), // scale x axis
+				length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y)), // scale y axis
+				length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z))  // scale z axis
+				);
+
+			float3 localPosition = mul(unity_WorldToObject, float4(IN.worldPos, 1)).xyz;
+			localPosition = localPosition * worldScale;
 
 			pixelData data;
-			data.position = IN.worldPos;
+			data.position = localPosition;
 			data.normal = WorldNormalVector(IN, o.Normal);
 			data.viewDirection = data.position - _WorldSpaceCameraPos;
 			data.viewDistance = length(data.viewDirection);

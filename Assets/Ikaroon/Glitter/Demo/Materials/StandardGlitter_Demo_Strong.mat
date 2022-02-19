@@ -82,7 +82,7 @@ Material:
     - _Influence: 0.5
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseScale: 50
+    - _NoiseScale: 100
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ScaleOnDistance: 0.05
@@ -90,7 +90,7 @@ Material:
     - _SpecularHighlights: 1
     - _SpecularInfluence: 0.9
     - _SrcBlend: 1
-    - _Start: 0.05
+    - _Start: 0.1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
