@@ -10,12 +10,12 @@ This glitter shader tries to be smooth and juicy at the same time. Instead of ma
 ## Focus Shader
 This focus shader is useful for only showing specific areas of a map (for example like in Luigi's Mansion). The visibility transitions smoothly using a bluenoise texture.
 
-[<img alt="Focus" width="300px" src="https://user-images.githubusercontent.com/65419234/154782128-dc814267-3b24-47d2-897e-ed47e971cac9.gif" />](https://youtu.be/OEqHJk0Lv5g)
+[<img alt="Focus" width="300px" src="https://user-images.githubusercontent.com/65419234/154782128-dc814267-3b24-47d2-897e-ed47e971cac9.gif" />](https://youtu.be/XDoKmx6BQ3k)
 
 ## Rewind Shader
 This rewind shader mimics the visual effect of a vhs rewinding or fast-forwarding. It comes with several settings and can be linked to the Time.timeScale.
 
-[<img alt="Rewind" width="300px" src="https://user-images.githubusercontent.com/65419234/154782126-6c69b91f-c1f9-4625-8b33-4897a06be4d3.gif" />](https://youtu.be/XDoKmx6BQ3k)
+[<img alt="Rewind" width="300px" src="https://user-images.githubusercontent.com/65419234/154782126-6c69b91f-c1f9-4625-8b33-4897a06be4d3.gif" />](https://youtu.be/OEqHJk0Lv5g)
 
 ## Screen Warp Shader
 This shader renders a specific texture or the grab texture bend along the normals.
