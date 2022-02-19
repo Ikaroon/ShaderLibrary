@@ -1,4 +1,4 @@
-Shader "Ikaroon/Standard Glitter"
+Shader "Ikaroon/Glitter/Standard"
 {
 	Properties
 	{
