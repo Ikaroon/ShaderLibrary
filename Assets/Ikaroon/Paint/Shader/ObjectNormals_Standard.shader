@@ -4,6 +4,7 @@ Shader "Custom/ObjectNormals_Standard"
 	{
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_PaintTex ("Paint (RGB)", 2D) = "white" {}
 		_ObjectNormals ("Object Normals", 2D) = "black" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
@@ -23,11 +24,13 @@ Shader "Custom/ObjectNormals_Standard"
 		#include "UnityStandardUtils.cginc"
 
 		sampler2D _MainTex;
+		sampler2D _PaintTex;
 		sampler2D _ObjectNormals;
 
 		struct Input
 		{
 			float2 uv_MainTex;
+			float2 uv_PaintTex;
 			float2 uv_ObjectNormals;
 			float3 worldNormal;
 			INTERNAL_DATA
@@ -51,6 +54,7 @@ Shader "Custom/ObjectNormals_Standard"
 
 			// Albedo comes from a texture tinted by color
 			fixed4 color = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+			color *= tex2D(_PaintTex, IN.uv_PaintTex);
 			o.Albedo = color.rgb;
 			o.Alpha = color.a;
 

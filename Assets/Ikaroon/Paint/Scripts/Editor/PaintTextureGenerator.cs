@@ -25,10 +25,13 @@ namespace Ikaroon.PaintEditor
 		Material m_toTextureMaterial;
 		Material m_bleedMaterial;
 		Material m_brushMaterial;
+		Material m_brushColorMaterial;
 
 		Texture m_noiseTexture;
 		Texture m_brushTexture;
-		RenderTexture m_texture;
+
+		RenderTexture m_normalTexture;
+		RenderTexture m_colorTexture;
 
 		List<int> m_indexX = new List<int>();
 		List<int> m_indexY = new List<int>();
@@ -61,20 +64,28 @@ namespace Ikaroon.PaintEditor
 				Generate(m_mesh);
 			}
 
-			if (GUILayout.Button("Save") && m_texture != null)
+			EditorGUILayout.BeginHorizontal();
+			if (GUILayout.Button("Save Normals") && m_normalTexture != null)
 			{
-				Save(m_texture);
+				Save(m_normalTexture);
 			}
-
-			if (m_texture != null)
+			if (GUILayout.Button("Save Colors") && m_colorTexture != null)
 			{
-				var width = position.width - 20f;
+				Save(m_colorTexture);
+			}
+			EditorGUILayout.EndHorizontal();
+
+			if (m_normalTexture != null)
+			{
+				var width = position.width - 30f;
 				var rect = GUILayoutUtility.GetRect(width, width);
-				rect.width = width;
-				rect.height = width;
+				rect.width = width * 0.5f;
+				rect.height = width * 0.5f;
 				rect.x += 10f;
 				rect.y += 10f;
-				GUI.DrawTexture(rect, m_texture);
+				GUI.DrawTexture(rect, m_normalTexture);
+				rect.x += width * 0.5f + 10f;
+				GUI.DrawTexture(rect, m_colorTexture);
 			}
 		}
 
@@ -88,14 +99,17 @@ namespace Ikaroon.PaintEditor
 
 			var brushShader = Shader.Find("Hidden/Ikaroon/BrushToObjectNormalTexture");
 			m_brushMaterial = new Material(brushShader);
+
+			var brushColorShader = Shader.Find("Hidden/Ikaroon/BrushToColorTexture");
+			m_brushColorMaterial = new Material(brushColorShader);
 		}
 
 		void OnDisable()
 		{
-			if (m_texture != null)
+			if (m_normalTexture != null)
 			{
-				m_texture.Release();
-				m_texture = null;
+				m_normalTexture.Release();
+				m_normalTexture = null;
 			}
 
 			if (m_toTextureMaterial != null)
@@ -121,22 +135,30 @@ namespace Ikaroon.PaintEditor
 
 		void Generate(Mesh mesh)
 		{
-			if (m_texture != null)
+			if (m_normalTexture != null)
 			{
-				m_texture.Release();
-				m_texture = null;
+				m_normalTexture.Release();
+				m_normalTexture = null;
 			}
 
-			m_texture = new RenderTexture(m_size.x, m_size.y, 0);
-			m_texture.filterMode = FilterMode.Point;
-			m_texture.wrapMode = TextureWrapMode.Clamp;
+			m_normalTexture = new RenderTexture(m_size.x, m_size.y, 0);
+			m_normalTexture.filterMode = FilterMode.Point;
+			m_normalTexture.wrapMode = TextureWrapMode.Clamp;
+
+			m_colorTexture = new RenderTexture(m_size.x, m_size.y, 0);
+			m_colorTexture.filterMode = FilterMode.Point;
+			m_colorTexture.wrapMode = TextureWrapMode.Clamp;
 
 			var oldRT = RenderTexture.active;
-			RenderTexture.active = m_texture;
+			RenderTexture.active = m_normalTexture;
 
 			GL.Clear(true, true, Color.black);
 			m_toTextureMaterial.SetPass(0);
 			Graphics.DrawMeshNow(mesh, Vector3.zero, Quaternion.identity, 0);
+
+			RenderTexture.active = m_colorTexture;
+
+			GL.Clear(true, true, Color.white);
 
 			RenderTexture.active = oldRT;
 
@@ -177,18 +199,31 @@ namespace Ikaroon.PaintEditor
 					m_brushMaterial.SetTexture(s_noiseTexID, m_noiseTexture);
 					m_brushMaterial.SetFloat(s_noiseStrengthID, m_noiseStrength);
 
-					var temp = RenderTexture.GetTemporary(m_texture.descriptor);
-					Graphics.Blit(m_texture, temp, m_brushMaterial);
-					Graphics.Blit(temp, m_texture);
+					var temp = RenderTexture.GetTemporary(m_normalTexture.descriptor);
+					Graphics.Blit(m_normalTexture, temp, m_brushMaterial);
+					Graphics.Blit(temp, m_normalTexture);
+					RenderTexture.ReleaseTemporary(temp);
+
+
+					m_brushColorMaterial.SetTexture(s_brushTexID, m_brushTexture);
+					m_brushColorMaterial.SetVector(s_brushBoundsID, bounds);
+					m_brushColorMaterial.SetFloat(s_brushAngleID, angle);
+
+					m_brushColorMaterial.SetTexture(s_noiseTexID, m_noiseTexture);
+					m_brushColorMaterial.SetFloat(s_noiseStrengthID, m_noiseStrength);
+
+					temp = RenderTexture.GetTemporary(m_colorTexture.descriptor);
+					Graphics.Blit(m_colorTexture, temp, m_brushColorMaterial);
+					Graphics.Blit(temp, m_colorTexture);
 					RenderTexture.ReleaseTemporary(temp);
 				}
 			}
 
 			for (int i = 0; i < m_bleed; i++)
 			{
-				var temp = RenderTexture.GetTemporary(m_texture.descriptor);
-				Graphics.Blit(m_texture, temp, m_bleedMaterial);
-				Graphics.Blit(temp, m_texture);
+				var temp = RenderTexture.GetTemporary(m_normalTexture.descriptor);
+				Graphics.Blit(m_normalTexture, temp, m_bleedMaterial);
+				Graphics.Blit(temp, m_normalTexture);
 				RenderTexture.ReleaseTemporary(temp);
 			}
 		}
@@ -205,7 +240,7 @@ namespace Ikaroon.PaintEditor
 			tex2D.filterMode = FilterMode.Bilinear;
 
 			var oldRT = RenderTexture.active;
-			RenderTexture.active = m_texture;
+			RenderTexture.active = texture;
 
 			tex2D.ReadPixels(new Rect(0, 0, tex2D.width, tex2D.height), 0, 0);
 			tex2D.Apply();
