@@ -62,13 +62,12 @@ Shader "Hidden/Ikaroon/BrushToObjectNormalTexture"
 
 			fixed4 frag (v2f i) : SV_Target
 			{
+				float2 rUV = mul(i.uv - i.center, (float2x2)_BrushRotation) + i.center;
+
 				float2 uv2 = float2(
-					InverseLerp(_BrushBounds.x, _BrushBounds.z, i.uv.x),
-					InverseLerp(_BrushBounds.y, _BrushBounds.w, i.uv.y)
+					InverseLerp(_BrushBounds.x, _BrushBounds.z, rUV.x),
+					InverseLerp(_BrushBounds.y, _BrushBounds.w, rUV.y)
 					);
-					
-				uv2 = mul(float4(uv2 - 0.5, 0, 1), _BrushRotation).xy + 0.5;
-				uv2 = saturate(uv2);
 
 				float3 col = tex2D(_MainTex, i.uv);
 				float3 centerColor = tex2D(_MainTex, i.center).rgb * 2 - 1;
@@ -84,7 +83,7 @@ Shader "Hidden/Ikaroon/BrushToObjectNormalTexture"
 
 				float brush = tex2D(_BrushTex, uv2).r;
 
-				float2 brushStrength = saturate(abs(1 - (uv2 * 2 - 1)));
+				float2 brushStrength = saturate(1 - (uv2 * 2 - 1));
 				brush = brush * brushStrength.x * brushStrength.y;
 
 				return float4(lerp(col, finalColor, brush), 1);
