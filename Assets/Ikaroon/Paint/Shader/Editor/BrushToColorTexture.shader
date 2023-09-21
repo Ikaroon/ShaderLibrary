@@ -6,7 +6,6 @@ Shader "Hidden/Ikaroon/BrushToColorTexture"
 		_BrushTex ("Brush", 2D) = "white" {}
 		_NoiseTex ("Noise", 2D) = "gray" {}
 		_BrushBounds ("Brush Bounds", Vector) = (0,0,1,1)
-		_BrushAngle ("Brush Angle", Float) = 0
 	}
 	SubShader
 	{
@@ -25,7 +24,7 @@ Shader "Hidden/Ikaroon/BrushToColorTexture"
 
 			sampler2D _BrushTex;
 			float4 _BrushBounds;
-			float _BrushAngle;
+			float4x4 _BrushRotation;
 
 			sampler2D _NoiseTex;
 			float _NoiseStrength;
@@ -63,18 +62,12 @@ Shader "Hidden/Ikaroon/BrushToColorTexture"
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float2 tuv2 = float2(
+				float2 uv2 = float2(
 					InverseLerp(_BrushBounds.x, _BrushBounds.z, i.uv.x),
 					InverseLerp(_BrushBounds.y, _BrushBounds.w, i.uv.y)
 					);
-
-				tuv2 = tuv2 * 2 - 1;
-				float cs = cos(_BrushAngle);
-				float sn = sin(_BrushAngle);
-				float2 uv2 = tuv2;
-				uv2.x = tuv2.x * cs - tuv2.y * sn;
-				uv2.y = tuv2.x * sn + tuv2.y * cs;
-				uv2 = uv2 * 0.5 + 0.5;
+					
+				uv2 = mul(float4(uv2 - 0.5, 0, 1), _BrushRotation).xy + 0.5;
 				uv2 = saturate(uv2);
 
 				float3 col = tex2D(_MainTex, i.uv);

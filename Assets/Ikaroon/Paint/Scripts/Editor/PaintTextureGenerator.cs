@@ -9,7 +9,7 @@ namespace Ikaroon.PaintEditor
 	{
 		static int s_brushTexID = Shader.PropertyToID("_BrushTex");
 		static int s_brushBoundsID = Shader.PropertyToID("_BrushBounds");
-		static int s_brushAngleID = Shader.PropertyToID("_BrushAngle");
+		static int s_brushRotationID = Shader.PropertyToID("_BrushRotation");
 		static int s_noiseTexID = Shader.PropertyToID("_NoiseTex");
 		static int s_noiseStrengthID = Shader.PropertyToID("_NoiseStrength");
 
@@ -187,14 +187,14 @@ namespace Ikaroon.PaintEditor
 
 					var baseX = (raX / (float)m_brushSteps) + Random.Range(-0.01f, 0.01f) * m_brushOffset.x;
 					var baseY = (raY / (float)m_brushSteps) + Random.Range(-0.01f, 0.01f) * m_brushOffset.y;
-					var rX = Random.Range(0.01f * m_brushStretchX.x, 0.01f * m_brushStretchX.y);
-					var rY = Random.Range(0.01f * m_brushStretchY.x, 0.01f * m_brushStretchY.y);
+					var rX = Random.Range(0.1f * m_brushStretchX.x, 0.1f * m_brushStretchX.y);
+					var rY = Random.Range(0.1f * m_brushStretchY.x, 0.1f * m_brushStretchY.y);
 					var bounds = new Vector4(baseX - rX, baseY - rY, baseX + size.x + rX, baseY + size.y + rY);
-					var angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+					var rotation = Matrix4x4.Rotate(Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
 
 					m_brushMaterial.SetTexture(s_brushTexID, m_brushTexture);
 					m_brushMaterial.SetVector(s_brushBoundsID, bounds);
-					m_brushMaterial.SetFloat(s_brushAngleID, angle);
+					m_brushMaterial.SetMatrix(s_brushRotationID, rotation);
 
 					m_brushMaterial.SetTexture(s_noiseTexID, m_noiseTexture);
 					m_brushMaterial.SetFloat(s_noiseStrengthID, m_noiseStrength);
@@ -207,7 +207,7 @@ namespace Ikaroon.PaintEditor
 
 					m_brushColorMaterial.SetTexture(s_brushTexID, m_brushTexture);
 					m_brushColorMaterial.SetVector(s_brushBoundsID, bounds);
-					m_brushColorMaterial.SetFloat(s_brushAngleID, angle);
+					m_brushColorMaterial.SetMatrix(s_brushRotationID, rotation);
 
 					m_brushColorMaterial.SetTexture(s_noiseTexID, m_noiseTexture);
 					m_brushColorMaterial.SetFloat(s_noiseStrengthID, m_noiseStrength);
