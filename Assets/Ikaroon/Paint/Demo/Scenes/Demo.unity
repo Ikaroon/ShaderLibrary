@@ -377,7 +377,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: d37e3b4130a2ae74fb752f9ca2e422f7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 17a5ebc0a60585443b18aae9088da10f, type: 2}
+      objectReference: {fileID: 2100000, guid: 5861d5d7c0076b44ea301b3ac491a404, type: 2}
     - target: {fileID: 919132149155446097, guid: d37e3b4130a2ae74fb752f9ca2e422f7, type: 3}
       propertyPath: m_Name
       value: SmoothMonkey
@@ -884,7 +884,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6600e1f553758b947bf1e5de9c02ec43, type: 2}
+  - {fileID: 2100000, guid: 493de54d2c248b449aa91561eff2153e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1284,7 +1284,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: fec527b19a11f0442aea13c1baf7a393, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 5bb279fc01b93e342bdfc8ed8735d28d, type: 2}
+      objectReference: {fileID: 2100000, guid: 7593d66ac42471c44adcbbe7fbd22b67, type: 2}
     - target: {fileID: 919132149155446097, guid: fec527b19a11f0442aea13c1baf7a393, type: 3}
       propertyPath: m_Name
       value: TestCube
