@@ -33,12 +33,18 @@ Shader "Custom/ObjectNormals_Standard"
 			float2 uv_PaintTex;
 			float2 uv_ObjectNormals;
 			float3 worldNormal;
+			float3 worldPos;
 			INTERNAL_DATA
 		};
 
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+
+		float InverseLerp(float a, float b, float x)
+		{
+			return (x - a) * (1 / (b - a));
+		}
 
 		float3 WorldToTangentNormalVector(Input IN, float3 normal) {
 			float3 t2w0 = WorldNormalVector(IN, float3(1,0,0));
@@ -50,7 +56,8 @@ Shader "Custom/ObjectNormals_Standard"
 
 		void surf (Input IN, inout SurfaceOutputStandard o)
 		{
-			IN.worldNormal = WorldNormalVector(IN, float3(0,0,1));
+			float3 sourceNormal = IN.worldNormal = WorldNormalVector(IN, float3(0,0,1));
+			float3 viewDir = normalize(IN.worldPos - _WorldSpaceCameraPos.xyz);
 
 			// Albedo comes from a texture tinted by color
 			fixed4 color = tex2D(_MainTex, IN.uv_MainTex) * _Color;
@@ -60,6 +67,8 @@ Shader "Custom/ObjectNormals_Standard"
 
 			fixed4 objectNormal = tex2D(_ObjectNormals, IN.uv_ObjectNormals) * 2 - 1;
 			float3 worldNormal = mul(unity_ObjectToWorld, objectNormal.xyz);
+			float facetStrength = saturate(InverseLerp(0, -0.2, dot(viewDir, worldNormal)));
+			worldNormal = lerp(sourceNormal, worldNormal, facetStrength);
 			o.Normal = WorldToTangentNormalVector(IN, worldNormal);
 
 			o.Metallic = _Metallic;
